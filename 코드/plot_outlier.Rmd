@@ -1,0 +1,164 @@
+---
+title: "data"
+author: "Seung ji Nam"
+date: "2020<eb>ÖÑ 5<ec>õî 23<ec>ùº"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+data = read.csv("C:/Users/seung/Desktop/finalproject/ESC20SPRING_team4/imputed_data.csv")
+data =data[-1]
+```
+
+```{r}
+remove_col = c(8,50,36,2,3,25,38,51,7,11,14,22,35,48,4,40,50,24,12,16,13,28,53,23,30,31,39,43,44,49,56,58,62,32,52,33,34)
+ncol(data[,-remove_col])
+newdata = data[,-remove_col]
+```
+
+
+```{r}
+ncol(data)
+corr = cor(data[,-28])
+```
+```{r}
+plot(data[,1])
+plot(data[,2])
+plot(data[,3])
+```
+```{r}
+corr["Attr17","Attr46"]
+corr["Attr64","Attr54"]
+corr["Attr9","Attr63"]
+```
+```{r}
+sum(corr[,"Attr9"])
+sum(corr[,"Attr63"])
+```
+```{r}
+
+library(ggplot2)
+ggplot( data = data, aes(class)) +
+  geom_bar()
+```
+
+```{r}
+data = read.csv("C:/Users/seung/Desktop/finalproject/ESC20SPRING_team4/scaled_data.csv")
+```
+
+
+```{r}
+x = 1:nrow(data)
+gg_data = cbind(1:nrow(data),data)
+colnames(gg_data)[1] ="id"
+
+```
+
+```{r}
+ggplot(data= data, aes(x,data$Attr5))+
+  geom_point()
+ggplot( data = gg_data[-c(999,3775),], aes(id,Attr5 ))+
+  geom_point()
+ggplot(data = gg_data[-c(999,3775),], aes(x = Attr5))+
+  geom_density()
+```
+```{r}
+ggplot(data= data, aes(x,data$Attr6))+
+  geom_point()
+ggplot( data = gg_data[-c(3134,1086,6282),], aes(id,Attr6))+
+  geom_point()
+ggplot(data = gg_data[-c(3134,1086,6282),], aes(x = Attr6))+
+  geom_density()
+```
+
+
+```{r}
+ggplot(data= data, aes(x,data$Attr15))+
+  geom_point()
+ggplot( data = gg_data[-c(3528),], aes(id,Attr15))+
+  geom_point()
+ggplot(data = gg_data[-c(3528),], aes(x = Attr15))+
+  geom_density()
+```
+```{r}
+ggplot(data= data, aes(x,data$Attr17))+
+  geom_point()
+```
+
+
+```{r}
+ggplot(data= data, aes(x,data$Attr19))+
+  geom_point()
+ggplot( data = gg_data[-c(2556),], aes(id,Attr19))+
+  geom_point()
+ggplot( data = gg_data[-c(2556,5811,5936),], aes(id,Attr19))+
+  geom_boxplot()
+```
+```{r}
+ggplot(data= data, aes(x,data$Attr26))+
+  geom_point()
+ggplot( data = gg_data[-c(2100,4680,2655),], aes(id,Attr26))+
+  geom_point()
+```
+
+```{r}
+ggplot(data= data, aes(x,data$Attr41))+
+  geom_point()
+ggplot( data = gg_data[-c(6425, 4769),], aes(id,Attr41))+
+  geom_point()
+```
+
+```{r}
+ggplot(data= data, aes(x,data$Attr42))+
+  geom_point()
+ggplot( data = gg_data[-c(2556),], aes(id,Attr42))+
+  geom_point()
+```
+
+```{r}
+ggplot(data= data, aes(x,data$Attr45))+
+  geom_point()
+ggplot( data = gg_data[-c(6233),], aes(id,Attr45))+
+  geom_point()
+```
+
+```{r}
+ggplot(data= data, aes(x,data$Attr54))+
+  geom_point()
+ggplot( data = gg_data[-c(4942),], aes(id,Attr54))+
+  geom_point()
+```
+```{r}
+ggplot(data= data, aes(x,data$Attr55))+
+  geom_point()
+ggplot( data = gg_data[-c(4612),], aes(id,Attr55))+
+  geom_point()
+```
+
+```{r}
+ggplot(data= data, aes(x,data$Attr57))+
+  geom_point()
+ggplot( data = gg_data[-c(1935),], aes(id,Attr57))+
+  geom_point()
+```
+
+```{r}
+ggplot(data= data, aes(x,data$Attr59))+
+  geom_point()
+ggplot( data = gg_data[-c(2064),], aes(id,Attr59))+
+  geom_point()
+```
+
+
+```{r}
+outlier <- c(999,3134,3528,2556,2655,6425,6233,4942,4612,1935,2064,6818,1594,2100,4680,4995,4120,5305,5936,5811)
+data_no_outlier <- data[-outlier, ]
+write.csv(data_no_outlier, "C:/Users/seung/Desktop/finalproject/outlier_removed.csv")
+```
+
