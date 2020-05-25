@@ -82,8 +82,19 @@ Feature Extraction
   * ROI(Return on investment): a profitability measure, 한 회사의 수익성을 판단하는 지표
   * 방법: dividing net income(=net profit) by total liabilities
   * 이게 ROI의 정의는 아니고, ROI를 계산하는 다양한 방법이 있는데 그중 하나라고 합니다!
-  * X1=net profit/total asset, X17=total assets/total liabilities
+  * X1 = net profit/total asset, X17 = total assets/total liabilities
   * X1 * X17 = net profit/total liabilities
+* X42 & X60
+  * X42 = profit on operating activities / sales
+    * sales: 매출액
+    * profit on operating activities: 영업활동(순이익의 결정에 영향을 미치는 모든 거래)으로부터 얻는 이익
+    * X42는 매출액 중 영업활동으로부터 얻는 실제 이익이 얼마나 되는지를 보여주는 지표
+  * X60 = sales / inventory
+    * inventory(재고자산): 유동자산 중 판매, 생산을 목적으로 보유한 재화로 판매과정을 통해 현금화할 수 있는 자산
+    * X60은 재고자산이 실제 매출액으로 얼마나 이어지는지를 보여주는 지표
+  * X42 * X60 = profit on operating activities / inventory
+    * 재고자산을 고려해 회사가 영업활동으로부터 얼마나 많은 이윤을 남기는지 보여주어 42, 60의 지표를 모두 반영
+  
   
 Visualization
 =============
