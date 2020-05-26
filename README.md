@@ -10,8 +10,9 @@ ESC 20 SPRING team 4 Final Project
 
 1.도입(데이터 설명)
 -------------
+* The dataset is about bankruptcy prediction of Polish companies
+* 아는듯 모르는듯한 각 기업들의 다양한 financial rate들이 변수로 있었다
 * 독립변수 64개
-  * (ppt수정필요) ppt에 독립변수 설명 빼먹음.. 
 * 파산기업 1/ 정상기업 0
 * NA 개수
 
@@ -24,29 +25,7 @@ Preprocessing
   * X1, X5, X6, X9, X10, X15, X17, X18, X19, X20, X21, X26, X27, X29, X41, X42, X45, X46, X47, X54, X55, X57, X59, X60, X61, X63, X64
 * ppt에 correlation 그래프 삽입
 
-3.NA Imputation
--------------
-* NA가 자료의 약 50%인 37번 변수 제거
-* NA Imputation 방법: R mice package를 사용한 pmm(predictive mean matching)
-  * MICE 패키지는 MI(multipe imputation) 방식으로 미싱 데이터를 채워넣는 방식이다. Monte Carlo 방법을 통해 채워놓은 n개의 complete dataset을 만들고 그 결과를 합쳐 최종 결과물을 내놓는다. 
-  * (ppt수정필요) 총 4단계가 반복됨을 설명해주기
-* Imputation 후 correlation이 갑자기 높아진 항목들(이 중 0.9보다 corr 높아진 9&63 제거)
-  * 17&46: 0.8149136, 54&64: 0.7010404, 9&63: 0.9309192
-  * (ppt수정필요) 이 부분 빼먹음
-
-4.Skewed된 자료 처리
--------------
-* 64개 변수 거의 다 skewed to the left
-* 따라서 전체 log transformation
-* log transformation 전/후 비교 그래프 삽입 -> 많이 좋아졌음을 보여주기
-  * (ppt 수정 필요) 그래프 고르는 중
-
-5.Scaling
--------------
-* MinMaxScaler 이용
-* 모든 데이터는 x축의 0과 1 사이에, y축의 0과 1사이에 위치
-
-6.Outlier 제거
+3.Outlier 제거
 -------------
 * outlier의 제거는 곧 데이터의 제거, 최대한 덜 삭제하자
 * outlier가 공통적인 data 조사
@@ -63,14 +42,49 @@ Preprocessing
   * 5305 is in : 'Attr19', 'Attr21', 'Attr45'
   * 5936 is in : 'Attr10', 'Attr19', 'Attr42'
   * 5811 is in : 'Attr19', 'Attr26', 'Attr42'
-* X항목에서 0으로 outlier가 되는 회사 데이터 제거
+* plot을 통해 눈에 띄는 outlier 제거
   * Attr5: 999, Attr6: 3134, Attr15: 3528, Attr19: 2556, Attr26: 2655, Attr41: 6425, Attr42: 2556, Attr45: 6233, Attr54: 4942, Attr55: 4612, Attr57: 1935, Attr59: 2064
+  * 예시로 X26, X57 outlier 제거 전/후 그래프 삽입
 * 총 20개의 회사 데이터 제거
   * 999,3134,3528,2556,2655,6425,6233,4942,4612,1935,2064,6818,1594,2100,4680,4995,4120,5305,5936,5811
 
- 7.다시 Scaling
+4.NA Imputation
 -------------
-(ppt수정필요) 승지님이 만드시는 중
+* NA가 자료의 약 50%인 37번 변수 제거
+* NA Imputation 방법: R mice package를 사용한 pmm(predictive mean matching)
+  * MICE 패키지는 MI(multipe imputation) 방식으로 미싱 데이터를 채워넣는 방식이다. Monte Carlo 방법을 통해 채워놓은 n개의 complete dataset을 만들고 그 결과를 합쳐 최종 결과물을 내놓는다. 
+* Imputation 후 correlation이 갑자기 높아진 항목들(이 중 0.9보다 corr 높아진 9&63 제거)
+  * 17&46: 0.8149136, 54&64: 0.7010404, 9&63: 0.9309192
+  *(ppt수정필요)시각적 자료 넣을 만한 것
+
+5.Skewed된 자료 처리
+-------------
+* 64개 변수 거의 다 skewed to the left
+* 따라서 전체 log transformation
+* log transformation 전/후 비교 그래프 삽입 -> 많이 좋아졌음을 보여주기
+  * X19 예시 그래프 삽입
+
+6.Scaling
+-------------
+* MinMaxScaler 이용
+* 모든 데이터는 x축의 0과 1 사이에, y축의 0과 1사이에 위치
+
+
+
+ 7.+PCA 시도
+-------------
+* 앞에서 Correlation 높은 변수를 0.7 기준으로 제거를 했더니 37개나 제거해서 너무 많이 제거한가 아닐까 생각
+* corr가 높은 변수들 몇가지를 pca로 차원축소를 시도
+  * 1, 7, 11, 14, 22, 35, 48 변수 correlation 그래프 삽입
+* PCA 차원축소는 변수해석에 어려움이 있지만, 같은 의미의 변수들을 1차원으로 축소하면 해석이 가능할 것 같다.
+  * 예시: 1, 7, 11, 14, 22, 35, 48 변수
+    * 변수들의 의미를 봤을 때, 거의 기업의 현금유동성과 관련이 있는 변수
+    * 따라서 현금 유동성을 설명하는 새로운 PCA 변수생성
+* PCA
+  * Attr2, Attr3, Attr10, Attr25, Attr38, Attr51 -> PCA1
+  * Attr1, Attr7, Attr11, Attr14, Attr22, Attr35, Attr48 -> PCA2
+  * Attr19, Attr23, Attr30, Attr31, Attr39, Attr43, Attr44, Attr49, Attr56, Attr58, Attr62 -> PCA3
+
 
 
 Feature Extraction
