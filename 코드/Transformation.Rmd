@@ -20,7 +20,7 @@ knn_data = read_csv("C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_tea
 mean_data = read_csv("C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_imputed_data_mean.csv")
 med_data= read_csv("C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_imputed_data_med.csv")
 
-mice_data %>% View()
+summary(mice_data)
 ```
 
 # 1) Transformation
@@ -28,62 +28,51 @@ mice_data %>% View()
 ## 1-a) Mice Imputated Data
 
 ```{r}
-for(i in 1:(ncol(mice_data)-1)){
-  skew_score = skewness(mice_data[,i])
-  if(skew_score > 1){
-    if(min(mice_data[,i]) <= 0){
-    mice_data[,i] = log(mice_data[,i] - min(mice_data[,i]) + 1)
-    }
-    else{
-      mice_data[,i] = log(mice_data[,i])
-    }
+
+log_transformed = c("Attr2", "Attr4", "Attr9", "Attr17", "Attr20", "Attr32", "Attr33", "Attr34", "Attr43", "Attr47","Attr51", "Attr52", "Attr53", "Attr55", "Attr59", "Attr60", "Attr61", "Attr63", "Attr64", "Attr69") 
+
+exp_transformed = c("Attr10","Attr25", "Attr38")
+
+for(i in log_transformed){
+  if(min(mice_data[i]) <= 0){
+    mice_data[i] = log(mice_data[i] - min(mice_data[i]) + 1)
   }
-  if(skew_score < -1){
-    mice_data[,i] = exp(mice_data[,i])
+  else{
+    mice_data[i] = log(mice_data[i])
   }
 }
 
-write.csv(mice_data, "C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_transfromed_data_mice.csv", row.names = FALSE)
+
+write.csv(mice_data, "C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_transformed_data_mice.csv", row.names = FALSE)
+
 
 ```
 
-### 왜도가 1 기준으로 큰 것들은 log transformation, -1보다 작은 것들은 exponential transformation 으로 왜도를 줄여주었다.
 
 ## 1-b) KNN Imputed Data
 ```{r}
-for(i in 1:(ncol(knn_data)-1)){
-  skew_score = skewness(knn_data[,i])
-  if(skew_score > 1){
-    if(min(knn_data[,i]) <= 0){
-    knn_data[,i] = log(knn_data[,i] - min(knn_data[,i]) + 1)
-    }
-    else{
-      knn_data[,i] = log(knn_data[,i])
-    }
+for(i in log_transformed){
+  if(min(knn_data[i]) <= 0){
+    knn_data[i] = log(knn_data[i] - min(knn_data[i]) + 1)
   }
-  if(skew_score < -1){
-    knn_data[,i] = exp(knn_data[,i])
+  else{
+    knn_data[i] = log(knn_data[i])
   }
 }
 
 
-write.csv(knn_data, "C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_transfromed_data_knn.csv", row.names = FALSE)
+write.csv(knn_data, "C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_transformed_data_knn.csv", row.names = FALSE)
+
 ```
 
 ## 1-c) MEAN Imputed Data
 ```{r}
-for(i in 1:(ncol(mean_data)-1)){
-  skew_score = skewness(mean_data[,i])
-  if(skew_score > 1){
-    if(min(mean_data[,i]) <= 0){
-    mean_data[,i] = log(mean_data[,i] - min(mean_data[,i]) + 1)
-    }
-    else{
-      mean_data[,i] = log(mean_data[,i])
-    }
+for(i in log_transformed){
+  if(min(mean_data[i]) <= 0){
+    mean_data[i] = log(mean_data[i] - min(mean_data[i]) + 1)
   }
-  if(skew_score < -1){
-    mean_data[,i] = exp(mean_data[,i])
+  else{
+    mean_data[i] = log(mean_data[i])
   }
 }
 
@@ -91,20 +80,14 @@ for(i in 1:(ncol(mean_data)-1)){
 write.csv(mean_data, "C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_transfromed_data_mean.csv", row.names = FALSE)
 ```
 
-## 1-c) MEDIAN Imputed Data
+## 1-d) MEDIAN Imputed Data
 ```{r}
-for(i in 1:(ncol(med_data)-1)){
-  skew_score = skewness(med_data[,i])
-  if(skew_score > 1){
-    if(min(med_data[,i]) <= 0){
-    med_data[,i] = log(med_data[,i] - min(med_data[,i]) + 1)
-    }
-    else{
-      med_data[,i] = log(med_data[,i])
-    }
+for(i in log_transformed){
+  if(min(med_data[i]) <= 0){
+    med_data[i] = log(med_data[i] - min(med_data[i]) + 1)
   }
-  if(skew_score < -1){
-    med_data[,i] = exp(med_data[,i])
+  else{
+    med_data[i] = log(med_data[i])
   }
 }
 
