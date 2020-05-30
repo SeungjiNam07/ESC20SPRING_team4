@@ -17,7 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(mice)
 library(impute)
-data = read_csv("C:/Users/dhxog/Desktop/ESC4-1/Final_Project/FS_2y_before_Bankruptcy_train.csv")
+data = read_csv("C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_calculated_data.csv")
 ```
 
 # 2) Change ? to NA
@@ -29,66 +29,33 @@ for(i in 1:ncol(data)){
 }
 
 summary(data)
+
+data$Attr67[data$Attr67 == -Inf] = NA
 ```
 
 # 3) NA가 많은 Attr37 제거 후 imputation 진행
 
 ## 3-1) MICE 패키지의 PMM방식 사용
-```{r}
-tempdata = data %>% select(-Attr37)
-
-imp = mice(tempdata, seed = 1234)
-```
-
-### 아직 안지워지는 NA가 있다! 이것은 상당히 높은 Correlation을 가진 Column들이 있기 때문이다. 어떤 것들이 Correlation이 높은지 찾아보자
 
 ```{r}
-cortable = cor(data, use = "pairwise.complete.obs") 
+
+tempdata = data %>% select(-c("X1","Attr1","Attr7","Attr42","Attr36","Attr46","Attr8","Attr12","Attr15","Attr28","Attr45","Attr23","Attr50","Attr62","Attr48","Attr35","Attr45","Attr27","Attr40","Attr44","Attr54","Attr56", "Attr58",  "Attr70", "class"))
 
 
-for(i in 1:ncol(cortable)){
-  temp = c()
-  for(j in 1:nrow(cortable)){
-    if(cortable[j,i] > 0.99 & j > i ){
-      temp = cbind(temp, paste0("Attr", j))
-    }
-  }
-  if(length(temp) >0){
-  cat("High Relative Comp for Attr", i, ":", temp, '\n')
-  }
-}
+imp = mice(tempdata, seed = 1234, m = 20, ridge = 0.001)
 
 complete.data = complete(imp)
 
 for(i in 1:ncol(complete.data)){
   if(sum(is.na(complete.data[,i] == T))){
-    cat("Attr", i, "has", sum(is.na(complete.data[,i])), "NAs", "\n")
+    colname = colnames(complete.data)[i]
+    cat("Attr", colname , "has", sum(is.na(complete.data[,i])), "NAs", "\n")
   }
 }
-```
 
-```{r}
-data_noimp = read_csv("C:/Users/dhxog/Desktop/ESC4-1/Final_Project/data_removed_without_imputation.csv")
-colnames(data_noimp)
+
 
 ```
-
-```{r}
-tempdata = tempdata %>% select(-c("Attr4", "Attr50", "Attr11", "Attr14", "Attr8", "Attr16", "Attr23", "Attr28", 
-                          "Attr52","Attr56", "Attr44"))
-
-imp = mice(tempdata, seed = 1234)
-
-complete.data = complete(imp)
-
-for(i in 1:ncol(complete.data)){
-  if(sum(is.na(complete.data[,i] == T))){
-    cat("Attr", i, "has", sum(is.na(complete.data[,i])), "NAs", "\n")
-  }
-}
-```
-
-### 모두 다 채워졌다!
 
 ```{r}
 imp$method
@@ -98,20 +65,27 @@ imp$method
 
 ## 저장하자
 ```{r}
-write.csv(complete.data, "imputed_data_mice.csv", row.names = FALSE)
+
+complete.data = cbind(complete.data, data$Attr70, data$class)
+
+write.csv(complete.data, "new_imputed_data_mice.csv", row.names = FALSE)
 ```
 
 ## 3-2) impute 함수의 KNN imputation 활용
 
 ```{r}
-knn_imputed = impute.knn(as.matrix(data))
+knn_data = data %>% select(-c("X1","Attr70", "class"))
+
+knn_imputed = impute.knn(as.matrix(knn_data))
 ```
 
 ### 저장하자
 ```{r}
 complete_data_knn = knn_imputed$data
 
-write.csv(complete_data_knn, "imputed_data_knn.csv", row.names = FALSE)
+complete_data_knn = cbind(complete_data_knn, data$Attr70, data$class)
+
+write.csv(complete_data_knn, "new_imputed_data_knn.csv", row.names = FALSE)
 ```
 
 
@@ -120,13 +94,33 @@ write.csv(complete_data_knn, "imputed_data_knn.csv", row.names = FALSE)
 ### 가장 간단하게 그 칼럼의 mean 값으로 NA를 채워넣는 방법이다.
 
 ```{r}
+
+
 complete_data_mean = as.matrix(data)
 
-for(i in 1:ncol(complete_data_mean)) {
-  complete_data_mean[ , i][is.na(complete_data_mean[ , i])] <- mean(complete_data_mean[ , i], na.rm = TRUE)
+for (i in 1:ncol(complete_data_mean)){
+  complete_data_mean[,i][is.na(complete_data_mean[,i])] <- mean(complete_data_mean[,i][order(complete_data_mean[,i])[4:(nrow(complete_data_mean)-3)]])
 }
 
 complete_data_mean = data.frame(complete_data_mean)
 
-write.csv(complete_data_mean, "imputed_data_mean.csv", row.names = FALSE)
+write.csv(complete_data_mean, "new_imputed_data_mean.csv", row.names = FALSE)
+```
+
+## 3-3) Mean Imputation
+
+### 가장 간단하게 그 칼럼의 mean 값으로 NA를 채워넣는 방법이다.
+
+```{r}
+
+
+complete_data_med = as.matrix(data)
+
+for (i in 1:ncol(complete_data_med)){
+  complete_data_med[,i][is.na(complete_data_med[,i])] <- median(complete_data_med[,i][order(complete_data_med[,i])])
+}
+
+complete_data_med = data.frame(complete_data_med)
+
+write.csv(complete_data_med, "new_imputed_data_med.csv", row.names = FALSE)
 ```
