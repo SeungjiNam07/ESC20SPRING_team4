@@ -16,10 +16,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 library(fBasics)
-mice_data = read_csv("C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_transfromed_data_mice.csv")
-knn_data = read_csv("C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_transfromed_data_knn.csv")
-mean_data = read_csv("C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_transfromed_data_mean.csv")
-med_data= read_csv("C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_transfromed_data_med.csv")
+mice_data = read_csv("C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_transformed_data_mice.csv")
+knn_data = read_csv("C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_transformed_data_knn.csv")
+mean_data = read_csv("C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_transformed_data_mean.csv")
+med_data= read_csv("C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_transformed_data_med.csv")
 ```
 
 ## 1) MICE 제거
