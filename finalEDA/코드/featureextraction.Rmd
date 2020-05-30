@@ -1,0 +1,56 @@
+---
+title : Transformation
+author:
+  name : 오태환
+date: "`r Sys.Date()`"
+output:
+  html_document
+------
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(tidyverse)
+library(fBasics)
+mice_data = read_csv("C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_transfromed_data_mice.csv")
+knn_data = read_csv("C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_transfromed_data_knn.csv")
+mean_data = read_csv("C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_transfromed_data_mean.csv")
+med_data= read_csv("C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_transfromed_data_med.csv")
+```
+
+## 1) MICE 제거
+```{r}
+mice_data = mice_data %>% select(-c(Attr17, Attr60, Attr25, Attr38, Attr26, Attr32, Attr34, Attr49, Attr57, Attr63))
+
+write.csv(mice_data, "C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/extracted_data_mice.csv", row.names = FALSE)
+```
+
+## 2) Median & Mean 변수 제거
+
+```{r}
+
+mean_data = mean_data %>% select(-c( "Attr50", "Attr22", "Attr48", "Attr17","Attr57","Attr36","Attr26","Attr54","Attr62","Attr32","Attr34","Attr44","Attr63","Attr60"))
+
+write.csv(mean_data, "C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/extracted_data_mean.csv", row.names = FALSE)
+
+med_data = med_data %>% select(-c( "Attr50", "Attr22", "Attr48", "Attr17","Attr57","Attr36","Attr26","Attr54","Attr62","Attr32","Attr34","Attr44","Attr63","Attr60"))
+
+write.csv(med_data, "C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/extracted_data_med.csv", row.names = FALSE)
+
+```
+
+## 3) Knn 변수 제거
+
+```{r}
+
+knn_data = knn_data %>% select(-c( "Attr2", "Attr25", "Attr38", "Attr8","Attr17","Attr46","Attr50","Attr7","Attr36","Attr66","Attr65","Attr28","Attr54","Attr62", Attr32, Attr34, Attr49, Attr44, Attr67, Attr60))
+
+write.csv(knn_data, "C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/extracted_data_knn.csv", row.names = FALSE)
+
+```
+
+
