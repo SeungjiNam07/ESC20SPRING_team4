@@ -66,9 +66,10 @@ imp$method
 ## 저장하자
 ```{r}
 
-complete.data = cbind(complete.data, data$Attr70, data$class)
+complete.data$class = data$class
+complete.data$Attr70 = data$Attr70
 
-write.csv(complete.data, "new_imputed_data_mice.csv", row.names = FALSE)
+write.csv(complete.data, "C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_imputed_data_mice.csv", row.names = FALSE)
 ```
 
 ## 3-2) impute 함수의 KNN imputation 활용
@@ -81,11 +82,16 @@ knn_imputed = impute.knn(as.matrix(knn_data))
 
 ### 저장하자
 ```{r}
-complete_data_knn = knn_imputed$data
+complete_data_knn = data.frame(knn_imputed$data)
 
-complete_data_knn = cbind(complete_data_knn, data$Attr70, data$class)
 
-write.csv(complete_data_knn, "new_imputed_data_knn.csv", row.names = FALSE)
+complete_data_knn$Attr70 = data$Attr70
+complete_data_knn$class = data$class
+
+
+View(complete_data_knn)
+
+write.csv(complete_data_knn, "C:/Users/dhxog/Desktop/ESC4-1/Final_Project/ESC20SPRING_team4/finalEDA/data/new_imputed_data_knn.csv", row.names = FALSE)
 ```
 
 
@@ -99,7 +105,7 @@ write.csv(complete_data_knn, "new_imputed_data_knn.csv", row.names = FALSE)
 complete_data_mean = as.matrix(data)
 
 for (i in 1:ncol(complete_data_mean)){
-  complete_data_mean[,i][is.na(complete_data_mean[,i])] <- mean(complete_data_mean[,i][order(complete_data_mean[,i])[4:(nrow(complete_data_mean)-3)]])
+  complete_data_mean[,i][is.na(complete_data_mean[,i])] <- mean(complete_data_mean[,i][order(complete_data_mean[,i])[4:(nrow(complete_data_mean)-3)]], na.rm=TRUE)
 }
 
 complete_data_mean = data.frame(complete_data_mean)
@@ -107,9 +113,9 @@ complete_data_mean = data.frame(complete_data_mean)
 write.csv(complete_data_mean, "new_imputed_data_mean.csv", row.names = FALSE)
 ```
 
-## 3-3) Mean Imputation
+## 3-4) Median Imputation
 
-### 가장 간단하게 그 칼럼의 mean 값으로 NA를 채워넣는 방법이다.
+### 그 칼럼의 median 값으로 NA를 채워넣는 방법이다.
 
 ```{r}
 
@@ -117,7 +123,7 @@ write.csv(complete_data_mean, "new_imputed_data_mean.csv", row.names = FALSE)
 complete_data_med = as.matrix(data)
 
 for (i in 1:ncol(complete_data_med)){
-  complete_data_med[,i][is.na(complete_data_med[,i])] <- median(complete_data_med[,i][order(complete_data_med[,i])])
+  complete_data_med[,i][is.na(complete_data_med[,i])] <- median(complete_data_med[,i][order(complete_data_med[,i])], na.rm = TRUE)
 }
 
 complete_data_med = data.frame(complete_data_med)
