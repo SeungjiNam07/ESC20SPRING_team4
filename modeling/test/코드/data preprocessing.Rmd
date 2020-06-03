@@ -1,0 +1,130 @@
+---
+title: "log transformation"
+author: "Seung ji Nam"
+date: '2020 6 4 '
+output: html_document
+---
+
+```{r}
+data = read.csv("/cloud/project/modeling/test/데이터/var_removed_test_new_x.csv")
+```
+
+```{r}
+sum(data=="?")
+sum(is.na(data))
+colnames(data)
+```
+```{r}
+for(i in 1:ncol(data)){
+  for( j in 1:nrow(data))
+  { if (data[j,i] =="?"){
+    data[j,i] <- NA
+  }
+  }
+   }
+```
+
+```{r}
+for(i in 1:ncol(data)){
+  
+  data[,i] = as.numeric(data[,i])
+  
+}
+```
+
+
+
+```{r}
+train = read.csv("/cloud/project/finalEDA/data/new_calculated_data.csv")
+sum(is.na(train))
+sum(train=="?")
+```
+```{r}
+for(i in 1:ncol(train)){
+  for( j in 1:nrow(train))
+  { if (train[j,i] =="?"){
+    train[j,i] <- NA
+  }
+  }
+}
+for(i in 1:ncol(train)){
+  
+  train[,i] = as.numeric(train[,i])
+  
+}
+```
+
+```{r}
+med_col = c('Attr1', 'Attr2', 'Attr3', 'Attr4', 'Attr5', 'Attr6', 'Attr9', 'Attr10', 'Attr12', 'Attr13', 'Attr15', 'Attr19', 'Attr21', 'Attr23', 'Attr24', 'Attr27', 'Attr29', 'Attr30', 'Attr31', 'Attr33', 'Attr39', 'Attr41', 'Attr42', 'Attr43', 'Attr45', 'Attr46', 'Attr47', 'Attr52', 'Attr53', 'Attr55', 'Attr58', 'Attr59', 'Attr61', 'Attr64', 'Attr65', 'Attr66', 'Attr67', 'Attr68', 'Attr69', 'Attr70')
+train = train[,med_col]
+```
+
+```{r}
+med_train = rep(0, ncol(train))
+med_test = rep(0,ncol(data))
+for (i in 1:ncol(train)){
+ med_train[i] =  median(train[,i],na.rm = T)
+}
+
+for (i in 1:ncol(data)){
+ med_test[i] =  median(data[,i],na.rm = T)
+}
+med_train
+med_test
+```
+
+
+
+```{r}
+for (i in 1:ncol(data)){
+  data[,i][is.na(data[,i])] <- median(data[,i],na.rm = T)
+}
+```
+
+
+
+
+```{r}
+sum(is.na(data))
+```
+
+```{r}
+library(ggplot2)
+
+boxnum = 10:(nrow(data)-10)
+for ( i in 1:ncol(data)){
+  newdata = data.frame(sort(data[,i])[boxnum])
+  colnames(newdata) = "x"
+  g <- ggplot(data = newdata, aes(x = x))
+  print(g + geom_histogram(bins=100) + xlim(mean(newdata$x)-2*sd(newdata$x), mean(newdata$x)+2*sd(newdata$x))+xlab(colnames(data)[i]))
+  
+}
+```
+```{r}
+med_data = data
+log_transformed = c("Attr2", "Attr4", "Attr9", "Attr33",  "Attr43", "Attr47", "Attr52", "Attr53", "Attr55", "Attr59",  "Attr61",  "Attr64", "Attr69") 
+for(i in log_transformed){
+  if(min(med_data[i]) <= 0){
+    med_data[i] = log(med_data[i] - min(med_data[i]) + 1)
+  }
+  else{
+    med_data[i] = log(med_data[i])
+  }
+}
+```
+
+```{r}
+data = med_data
+boxnum = 10:(nrow(data)-10)
+for ( i in 1:ncol(data)){
+  newdata = data.frame(sort(data[,i])[boxnum])
+  colnames(newdata) = "x"
+  g <- ggplot(data = newdata, aes(x = x))
+  print(g + geom_histogram(bins=100) + xlim(mean(newdata$x)-2*sd(newdata$x), mean(newdata$x)+2*sd(newdata$x))+xlab(colnames(data)[i]))
+  
+}
+```
+```{r}
+write.csv(data, "/cloud/project/modeling/test/데이터/imputed_transformed_test.csv", row.names = FALSE)
+```
+
